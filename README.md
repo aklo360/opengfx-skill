@@ -10,6 +10,8 @@ AI-powered brand design system. Complete logo systems and social assets, generat
 - **Style Guide** — Colors, typography, render style (auto-detected)
 - **Social Assets** — Avatar (1K + ACP), Twitter banner, OG card, community banner
 - **Dark/Light Mode** — Auto-detected based on brand concept
+- **AI Brand Naming** — Brand name is optional! AI generates the perfect name from your concept
+- **BYOL Mode** — Already have a logo? Bring your own and generate social assets
 
 ## Pricing
 
@@ -20,17 +22,38 @@ AI-powered brand design system. Complete logo systems and social assets, generat
 
 ## Quick Start (ACP)
 
+### Logo Service
+
 ```bash
-# Create a logo job
+# With brand name
 acp job create 0x7cf4CE250a47Baf1ab87820f692BB87B974a6F4e logo \
-  --requirements '{"brandName":"Acme","concept":"Modern fintech, bold and trustworthy","tagline":"Banking for Everyone"}'
+  --requirements '{"brandName":"Acme","concept":"Modern fintech startup"}'
 
-# Poll for completion
-acp job status <jobId>
+# AI generates the name (brand name optional!)
+acp job create 0x7cf4CE250a47Baf1ab87820f692BB87B974a6F4e logo \
+  --requirements '{"concept":"AI fitness coaching for busy professionals"}'
+```
 
-# Create social assets (using brand-system.json from logo output)
+### Social Service
+
+```bash
+# From logo service output
 acp job create 0x7cf4CE250a47Baf1ab87820f692BB87B974a6F4e social \
   --requirements '{"brandSystemUrl":"https://.../brand-system.json"}'
+
+# BYOL — bring your own logo (AI extracts colors)
+acp job create 0x7cf4CE250a47Baf1ab87820f692BB87B974a6F4e social \
+  --requirements '{"logoUrl":"https://example.com/logo.png","brandName":"Acme"}'
+
+# BYOL with custom colors
+acp job create 0x7cf4CE250a47Baf1ab87820f692BB87B974a6F4e social \
+  --requirements '{"logoUrl":"https://example.com/logo.png","brandName":"Acme","primaryColor":"#FF5500","renderStyle":"gradient"}'
+```
+
+### Poll for completion
+
+```bash
+acp job status <jobId>
 ```
 
 ## Output
@@ -53,6 +76,31 @@ og-card.png           # 1200x628 (1.91:1)
 community-banner.png  # 1200x480 (2.5:1)
 ```
 
+## Input Options
+
+### Logo Service
+| Field | Required | Description |
+|-------|----------|-------------|
+| `concept` | ✅ | Brand concept, vibe, industry, style direction |
+| `brandName` | ❌ | Brand name (AI generates if not provided) |
+| `tagline` | ❌ | Optional tagline/slogan |
+
+### Social Service (Mode 1: From Logo Service)
+| Field | Required | Description |
+|-------|----------|-------------|
+| `brandSystemUrl` | ✅ | URL to brand-system.json from logo service |
+
+### Social Service (Mode 2: BYOL)
+| Field | Required | Description |
+|-------|----------|-------------|
+| `logoUrl` | ✅ | URL to your existing logo image |
+| `brandName` | ✅ | Brand name |
+| `tagline` | ❌ | Optional tagline |
+| `primaryColor` | ❌ | Primary color hex (auto-extracted if not provided) |
+| `secondaryColor` | ❌ | Secondary color hex |
+| `backgroundColor` | ❌ | Background color hex |
+| `renderStyle` | ❌ | flat, gradient, glass, chrome, gold, neon, 3d |
+
 ## Agent Details
 
 - **Agent:** OpenGFX
@@ -63,9 +111,9 @@ community-banner.png  # 1200x480 (2.5:1)
 
 - **Website:** https://opengfx.app
 - **ClawHub:** https://clawhub.com/skills/opengfx
-- **GitHub:** https://github.com/aklo360/openGFX
+- **GitHub:** https://github.com/aklo360/opengfx-skill
 - **ACP Marketplace:** https://app.virtuals.io/acp
 
 ## Built by
 
-[AKLO Labs](https://aklo.io)
+[AKLO Labs](https://aklo.studio)
