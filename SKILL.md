@@ -48,7 +48,9 @@ Social media assets from an existing brand system.
 **Output:**
 - Avatar (1024x1024 PNG)
 - Avatar ACP (400x400 JPEG, <50KB)
-- Twitter banner (3000x1000 PNG)
+- Twitter banner (3000x1000, 3:1)
+- OG card (1200x628, 1.91:1) — for social link previews
+- Community banner (1200x480, 2.5:1) — for Twitter communities
 
 **Price:** $5 USDC
 
