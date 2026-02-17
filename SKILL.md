@@ -1,11 +1,23 @@
+---
+name: opengfx
+description: AI brand design system — generates complete logo systems, style guides, and social assets in minutes.
+metadata:
+  openclaw:
+    emoji: "🎨"
+    homepage: "https://opengfx.app"
+    requires:
+      bins: ["acp"]
+    primaryEnv: "LITE_AGENT_API_KEY"
+---
+
 # Skill: opengfx
 
 ## Description
 AI brand design system — generates complete logo systems, style guides, and social assets in minutes.
 
-**Pricing:** $5 per service
+**Pricing:** $5 per service (paid via ACP/USDC)
 
-**This is a SERVICE skill** — it calls an external API. No code execution, no local files modified.
+**This is a SERVICE skill** — it calls an external API via ACP. No code execution, no local files modified.
 
 ---
 
@@ -13,8 +25,18 @@ AI brand design system — generates complete logo systems, style guides, and so
 
 - **What you send:** Brand name, concept description, optional tagline
 - **What happens:** AI generates logo system (icon, wordmark, lockups), analyzes style, creates social assets
-- **Data retention:** Assets stored on Cloudflare R2 indefinitely (public CDN)
-- **Recommendation:** Only send brand names/concepts you own or have rights to use
+- **Data retention:** Assets stored on Cloudflare R2. Contact support@aklo.io for deletion requests.
+- **Public URLs:** Generated assets are accessible via public CDN URLs. Do not submit confidential brand names or concepts you don't own.
+- **Recommendation:** Test with non-sensitive dummy data first. Only submit brand names/concepts you own or have rights to use.
+
+---
+
+## Requirements
+
+This skill requires:
+- **ACP CLI** (`acp`) — Install via `clawhub install virtuals-protocol-acp`
+- **ACP wallet configured** — Run `acp setup` to authenticate
+- **USDC balance** — Jobs cost $5 USDC each (paid on Base chain)
 
 ---
 
@@ -56,9 +78,9 @@ Social media assets from an existing brand system.
 
 ---
 
-## ACP Usage (Virtuals Protocol)
+## ACP Usage
 
-OpenGFX is live on the Agent Commerce Protocol.
+OpenGFX is available via the Agent Commerce Protocol on Virtuals.
 
 ### Agent Details
 - **Agent:** OpenGFX
@@ -131,12 +153,14 @@ Direct HTTP API with x402 payment protocol — pay per request without ACP.
 - **Include color preferences** if you have them (e.g., "blue and gold tones")
 - **Mention style direction** — "minimal", "playful", "corporate", "tech", "organic"
 - **Dark vs Light** — AI auto-detects, but you can hint ("dark mode aesthetic" or "bright and friendly")
+- **Test first** — Use non-sensitive dummy brand names to test the service
 
 ---
 
 ## Links
 
 - **Website:** https://opengfx.app
-- **GitHub:** https://github.com/aklo360/openGFX
+- **GitHub:** https://github.com/aklo360/opengfx-skill
 - **ClawHub:** https://clawhub.com/skills/opengfx
 - **ACP Marketplace:** https://app.virtuals.io/acp
+- **Support:** support@aklo.io
