@@ -12,6 +12,7 @@ AI-powered brand design system. Complete logo systems and social assets, generat
 - **Dark/Light Mode** — Auto-detected based on brand concept
 - **AI Brand Naming** — Brand name is optional! AI generates the perfect name from your concept
 - **BYOL Mode** — Already have a logo? Bring your own and generate social assets
+- **Multi-Chain Payments** — Pay with USDC on Base or SOL on Solana
 
 ## Pricing
 
@@ -20,40 +21,112 @@ AI-powered brand design system. Complete logo systems and social assets, generat
 | Logo System | $5 USDC | Icon, wordmark, stacked, horizontal + style guide |
 | Social Assets | $5 USDC | Avatar (1K + 400px) + 3 banner formats |
 
-## Quick Start (ACP)
+## Two Integration Options
 
-### Logo Service
+### Option 1: ACP (Virtuals Protocol)
+
+For OpenClaw agents with the ACP skill installed.
 
 ```bash
-# With brand name
+# Install skill
+clawhub install opengfx
+
+# Create logo job
 acp job create 0x7cf4CE250a47Baf1ab87820f692BB87B974a6F4e logo \
   --requirements '{"brandName":"Acme","concept":"Modern fintech startup"}'
 
-# AI generates the name (brand name optional!)
+# AI generates brand name (optional!)
 acp job create 0x7cf4CE250a47Baf1ab87820f692BB87B974a6F4e logo \
   --requirements '{"concept":"AI fitness coaching for busy professionals"}'
+
+# Poll for completion
+acp job status <jobId>
 ```
 
-### Social Service
+### Option 2: x402 (Direct API)
+
+Pay-per-request via HTTP 402. Works with any agent or app.
+
+**Base URL:** `https://gateway.opengfx.app`
 
 ```bash
-# From logo service output
+# Request (returns 402 with payment options)
+curl -X POST https://gateway.opengfx.app/v1/logo \
+  -H "Content-Type: application/json" \
+  -d '{"brand_name":"Acme","concept":"Modern fintech startup"}'
+
+# After signing payment, retry with X-Payment header
+curl -X POST https://gateway.opengfx.app/v1/logo \
+  -H "Content-Type: application/json" \
+  -H "X-Payment: <base64-signed-payment>" \
+  -d '{"brand_name":"Acme","concept":"Modern fintech startup"}'
+
+# Poll for completion
+curl https://gateway.opengfx.app/v1/jobs/<jobId>
+```
+
+#### Supported Payment Chains
+
+| Chain | Asset | Network ID |
+|-------|-------|------------|
+| Base | USDC | `eip155:8453` |
+| Solana | SOL | `solana:mainnet` |
+
+#### x402 Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/` | API documentation |
+| GET | `/v1/pricing` | Pricing with current SOL rate |
+| POST | `/v1/logo` | Generate logo system (x402) |
+| POST | `/v1/socials` | Generate social assets (x402) |
+| GET | `/v1/jobs/:id` | Check job status |
+
+#### Using @x402/fetch SDK
+
+```typescript
+import { wrapFetch } from '@x402/fetch';
+
+const x402Fetch = wrapFetch(fetch, wallet);
+
+const response = await x402Fetch('https://gateway.opengfx.app/v1/logo', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    brand_name: 'Acme',
+    concept: 'Modern fintech startup'
+  })
+});
+
+const { jobId } = await response.json();
+// Poll /v1/jobs/:jobId for completion
+```
+
+## Social Service Modes
+
+### From Logo Service
+
+```bash
+# ACP
 acp job create 0x7cf4CE250a47Baf1ab87820f692BB87B974a6F4e social \
   --requirements '{"brandSystemUrl":"https://.../brand-system.json"}'
 
-# BYOL — bring your own logo (AI extracts colors)
+# x402
+curl -X POST https://gateway.opengfx.app/v1/socials \
+  -H "Content-Type: application/json" \
+  -d '{"brand_system_url":"https://.../brand-system.json"}'
+```
+
+### BYOL (Bring Your Own Logo)
+
+```bash
+# AI extracts colors
 acp job create 0x7cf4CE250a47Baf1ab87820f692BB87B974a6F4e social \
   --requirements '{"logoUrl":"https://example.com/logo.png","brandName":"Acme"}'
 
-# BYOL with custom colors
+# With custom colors
 acp job create 0x7cf4CE250a47Baf1ab87820f692BB87B974a6F4e social \
   --requirements '{"logoUrl":"https://example.com/logo.png","brandName":"Acme","primaryColor":"#FF5500","renderStyle":"gradient"}'
-```
-
-### Poll for completion
-
-```bash
-acp job status <jobId>
 ```
 
 ## Output
@@ -82,30 +155,30 @@ community-banner.png  # 1200x480 (2.5:1)
 | Field | Required | Description |
 |-------|----------|-------------|
 | `concept` | ✅ | Brand concept, vibe, industry, style direction |
-| `brandName` | ❌ | Brand name (AI generates if not provided) |
+| `brandName` / `brand_name` | ❌ | Brand name (AI generates if not provided) |
 | `tagline` | ❌ | Optional tagline/slogan |
 
 ### Social Service (Mode 1: From Logo Service)
 | Field | Required | Description |
 |-------|----------|-------------|
-| `brandSystemUrl` | ✅ | URL to brand-system.json from logo service |
+| `brandSystemUrl` / `brand_system_url` | ✅ | URL to brand-system.json from logo service |
 
 ### Social Service (Mode 2: BYOL)
 | Field | Required | Description |
 |-------|----------|-------------|
-| `logoUrl` | ✅ | URL to your existing logo image |
-| `brandName` | ✅ | Brand name |
+| `logoUrl` / `logo_url` | ✅ | URL to your existing logo image |
+| `brandName` / `brand_name` | ✅ | Brand name |
 | `tagline` | ❌ | Optional tagline |
-| `primaryColor` | ❌ | Primary color hex (auto-extracted if not provided) |
-| `secondaryColor` | ❌ | Secondary color hex |
-| `backgroundColor` | ❌ | Background color hex |
-| `renderStyle` | ❌ | flat, gradient, glass, chrome, gold, neon, 3d |
+| `primaryColor` / `primary_color` | ❌ | Primary color hex (auto-extracted if not provided) |
+| `secondaryColor` / `secondary_color` | ❌ | Secondary color hex |
+| `backgroundColor` / `background_color` | ❌ | Background color hex |
+| `renderStyle` / `render_style` | ❌ | flat, gradient, glass, chrome, gold, neon, 3d |
 
 ## Agent Details
 
-- **Agent:** OpenGFX
-- **Wallet:** `0x7cf4CE250a47Baf1ab87820f692BB87B974a6F4e`
-- **Protocol:** ACP (Virtuals Protocol)
+- **Agent Wallet:** `0x7cf4CE250a47Baf1ab87820f692BB87B974a6F4e`
+- **x402 Gateway:** https://gateway.opengfx.app
+- **ACP Protocol:** Virtuals Protocol
 
 ## Links
 
