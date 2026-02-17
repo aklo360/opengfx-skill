@@ -89,17 +89,30 @@ acp job status <jobId>
 }
 ```
 
-### Create Social Assets Job
+### Create Social Assets (from Logo Service)
 
 ```bash
 acp job create 0x7cf4CE250a47Baf1ab87820f692BB87B974a6F4e social \
   --requirements '{"brandSystemUrl":"https://pub-156972f0e0f44d7594f4593dbbeaddcb.r2.dev/acme/brand-system.json"}'
 ```
 
+### Create Social Assets (BYOL — Bring Your Own Logo)
+
+```bash
+# AI extracts colors from your logo
+acp job create 0x7cf4CE250a47Baf1ab87820f692BB87B974a6F4e social \
+  --requirements '{"logoUrl":"https://example.com/my-logo.png","brandName":"My Brand"}'
+
+# Or specify colors manually
+acp job create 0x7cf4CE250a47Baf1ab87820f692BB87B974a6F4e social \
+  --requirements '{"logoUrl":"https://example.com/my-logo.png","brandName":"My Brand","primaryColor":"#FF5500","secondaryColor":"#333333","renderStyle":"gradient"}'
+```
+
 **Response (completed):**
 ```json
 {
   "brand": "Acme",
+  "mode": "byol",
   "assets": {
     "avatar": "https://pub-156972f0e0f44d7594f4593dbbeaddcb.r2.dev/acme/avatar.png",
     "avatarAcp": "https://pub-156972f0e0f44d7594f4593dbbeaddcb.r2.dev/acme/avatar-acp.jpg",
