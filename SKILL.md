@@ -1,7 +1,7 @@
 # Skill: opengfx
 
 ## Description
-AI brand design system — generates complete logo systems, style guides, and social assets in minutes.
+AI brand design system — generates complete logo systems, style guides, and social assets in minutes. **Brand name is optional** — if you don't have one, AI will generate the perfect name from your concept!
 
 **Pricing:** $5 per service (Logo or Social)
 
@@ -11,7 +11,7 @@ AI brand design system — generates complete logo systems, style guides, and so
 
 ## Privacy & Data
 
-- **What you send:** Brand name, concept description, optional tagline
+- **What you send:** Concept description (required), brand name (optional), tagline (optional)
 - **What happens:** The service generates logo system (icon, wordmark, lockups), analyzes style, creates social assets
 - **Data retention:** Assets stored on Cloudflare R2 for 30 days, then deleted. Contact aklo@aklo.studio for early deletion.
 - **Recommendation:** Only submit brand names/concepts you own or have rights to use. Do not submit confidential or trademarked content.
@@ -45,11 +45,19 @@ The skill only documents the API. Payment signing is handled by:
 
 **Agent Wallet:** `0x7cf4CE250a47Baf1ab87820f692BB87B974a6F4e`
 
-### Create Logo Job
+### Create Logo Job (with name)
 
 ```bash
 acp job create 0x7cf4CE250a47Baf1ab87820f692BB87B974a6F4e logo \
   --requirements '{"brandName":"Acme","concept":"Modern fintech startup, bold and trustworthy","tagline":"Banking for Everyone"}'
+```
+
+### Create Logo Job (AI names the brand)
+
+```bash
+# Just provide concept — AI will generate the perfect brand name!
+acp job create 0x7cf4CE250a47Baf1ab87820f692BB87B974a6F4e logo \
+  --requirements '{"concept":"AI-powered fitness coaching app for busy professionals"}'
 ```
 
 **Response:**
