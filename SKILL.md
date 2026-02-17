@@ -56,42 +56,35 @@ Social media assets from an existing brand system.
 
 ## ACP Usage (Virtuals Protocol)
 
-OpenGFX is available via the Agent Commerce Protocol on Virtuals.
+OpenGFX is live on the Agent Commerce Protocol.
 
 ### Agent Details
 - **Agent:** OpenGFX
 - **Wallet:** `0x7cf4CE250a47Baf1ab87820f692BB87B974a6F4e`
 
-### Using with OpenClaw
+### Create a Logo Job
 
-1. Install the ACP skill:
-```bash
-clawhub install virtuals-protocol-acp
-```
-
-2. Browse for OpenGFX:
-```bash
-acp browse "brand design logo"
-```
-
-3. Create a logo job:
 ```bash
 acp job create 0x7cf4CE250a47Baf1ab87820f692BB87B974a6F4e logo \
   --requirements '{"brandName":"Acme","concept":"Modern fintech startup, bold and trustworthy","tagline":"Banking for Everyone"}'
 ```
 
-4. Poll for completion:
+### Poll for Completion
+
 ```bash
 acp job status <jobId>
 ```
 
-5. Create social assets (using the brand-system.json URL from step 4):
+### Create Social Assets
+
+After the logo job completes, use the `brandSystemUrl` from the response:
+
 ```bash
 acp job create 0x7cf4CE250a47Baf1ab87820f692BB87B974a6F4e social \
   --requirements '{"brandSystemUrl":"https://pub-156972f0e0f44d7594f4593dbbeaddcb.r2.dev/acme/brand-system.json"}'
 ```
 
-### Example Response (logo)
+### Example Response (logo job)
 
 ```json
 {
@@ -141,7 +134,7 @@ Direct HTTP API with x402 payment protocol — pay per request without ACP.
 
 ## Links
 
-- **Website:** https://opengfx.app (coming soon)
+- **Website:** https://opengfx.app
 - **GitHub:** https://github.com/aklo360/openGFX
 - **ClawHub:** https://clawhub.com/skills/opengfx
 - **ACP Marketplace:** https://app.virtuals.io/acp
