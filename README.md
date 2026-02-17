@@ -9,9 +9,10 @@ AI-powered brand design system. Complete logo systems and social assets, generat
 - **Logo System** — Icon, wordmark, stacked & horizontal lockups
 - **Style Guide** — Colors, typography, render style (auto-detected)
 - **Social Assets** — Avatar (1K + ACP), Twitter banner, OG card, community banner
+- **On-Brand GFX** — Marketing graphics for announcements, launches, features, and daily content
 - **Dark/Light Mode** — Auto-detected based on brand concept
 - **AI Brand Naming** — Brand name is optional! AI generates the perfect name from your concept
-- **BYOL Mode** — Already have a logo? Bring your own and generate social assets
+- **BYOL Mode** — Already have a logo? Bring your own and generate social assets or GFX
 - **Multi-Chain Payments** — Pay with USDC on Base or SOL on Solana
 
 ## Pricing
@@ -20,6 +21,7 @@ AI-powered brand design system. Complete logo systems and social assets, generat
 |---------|-------|--------|
 | Logo System | $5 USDC | Icon, wordmark, stacked, horizontal + style guide |
 | Social Assets | $5 USDC | Avatar (1K + 400px) + 3 banner formats |
+| On-Brand GFX | $2 USDC | Single marketing graphic (any aspect ratio) |
 
 ## Two Integration Options
 
@@ -80,6 +82,7 @@ curl https://gateway.opengfx.app/v1/jobs/<jobId>
 | GET | `/v1/pricing` | Pricing with current SOL rate |
 | POST | `/v1/logo` | Generate logo system (x402) |
 | POST | `/v1/socials` | Generate social assets (x402) |
+| POST | `/v1/gfx` | Generate on-brand graphic (x402) |
 | GET | `/v1/jobs/:id` | Check job status |
 
 #### Using @x402/fetch SDK
@@ -128,6 +131,40 @@ acp job create 0x7cf4CE250a47Baf1ab87820f692BB87B974a6F4e social \
 acp job create 0x7cf4CE250a47Baf1ab87820f692BB87B974a6F4e social \
   --requirements '{"logoUrl":"https://example.com/logo.png","brandName":"Acme","primaryColor":"#FF5500","renderStyle":"gradient"}'
 ```
+
+## GFX Service ($2/graphic)
+
+Generate on-brand marketing graphics for announcements, launches, features, and daily content.
+
+### From Logo Service
+
+```bash
+# ACP
+acp job create 0x7cf4CE250a47Baf1ab87820f692BB87B974a6F4e gfx \
+  --requirements '{"brandSystemUrl":"https://.../brand-system.json","prompt":"Announcement: We hit 10K users!","aspectRatio":"1:1"}'
+
+# x402
+curl -X POST https://gateway.opengfx.app/v1/gfx \
+  -H "Content-Type: application/json" \
+  -d '{"brand_system_url":"https://.../brand-system.json","prompt":"Launch graphic for new feature","aspect_ratio":"16:9"}'
+```
+
+### BYOL
+
+```bash
+acp job create 0x7cf4CE250a47Baf1ab87820f692BB87B974a6F4e gfx \
+  --requirements '{"logoUrl":"https://example.com/logo.png","brandName":"Acme","prompt":"Hiring announcement","aspectRatio":"1:1"}'
+```
+
+### Supported Aspect Ratios
+
+| Ratio | Use Case |
+|-------|----------|
+| `1:1` | Instagram, Twitter, LinkedIn |
+| `4:5` | Instagram portrait |
+| `9:16` | Stories, Reels, TikTok |
+| `16:9` | YouTube, Twitter cards |
+| `3:2` | Blog headers |
 
 ## Output
 

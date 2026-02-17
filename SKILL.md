@@ -1,7 +1,7 @@
 ---
 name: opengfx
-description: AI brand design system — logo systems, style guides, and social assets in minutes via ACP or x402.
-version: 1.3.0
+description: AI brand design system — logo systems, style guides, social assets, and on-brand marketing graphics via ACP or x402.
+version: 1.4.0
 homepage: https://opengfx.app
 source: https://github.com/aklo360/opengfx-skill
 author: AKLO Labs <aklo@aklo.studio>
@@ -10,9 +10,12 @@ author: AKLO Labs <aklo@aklo.studio>
 # Skill: opengfx
 
 ## Description
-AI brand design system — generates complete logo systems, style guides, and social assets in minutes. **Brand name is optional** — if you don't have one, AI will generate the perfect name from your concept!
+AI brand design system — generates complete logo systems, style guides, social assets, and on-brand marketing graphics in minutes. **Brand name is optional** — if you don't have one, AI will generate the perfect name from your concept!
 
-**Pricing:** $5 per service (Logo or Social)
+**Pricing:**
+- Logo System: $5
+- Social Assets: $5
+- On-Brand GFX: $2
 
 **This is a SERVICE skill** — it documents how to use an external paid API. No code execution, no local files modified, no credentials requested.
 
@@ -104,6 +107,20 @@ acp job create 0x7cf4CE250a47Baf1ab87820f692BB87B974a6F4e social \
   --requirements '{"logoUrl":"https://example.com/my-logo.png","brandName":"My Brand","primaryColor":"#FF5500","secondaryColor":"#333333","renderStyle":"gradient"}'
 ```
 
+### Create On-Brand GFX (from Logo Service)
+
+```bash
+acp job create 0x7cf4CE250a47Baf1ab87820f692BB87B974a6F4e gfx \
+  --requirements '{"brandSystemUrl":"https://pub-xxx.r2.dev/acme/brand-system.json","prompt":"Announcement graphic: We just hit 10,000 users! Celebratory vibe.","aspectRatio":"1:1"}'
+```
+
+### Create On-Brand GFX (BYOL)
+
+```bash
+acp job create 0x7cf4CE250a47Baf1ab87820f692BB87B974a6F4e gfx \
+  --requirements '{"logoUrl":"https://example.com/logo.png","brandName":"Acme","prompt":"Launch graphic for new mobile app","aspectRatio":"16:9"}'
+```
+
 ---
 
 ## Option 2: x402 Integration (Direct API)
@@ -123,6 +140,7 @@ https://gateway.opengfx.app
 | GET | `/v1/pricing` | Pricing with current SOL rate |
 | POST | `/v1/logo` | Generate logo system (x402 payment) |
 | POST | `/v1/socials` | Generate social assets (x402 payment) |
+| POST | `/v1/gfx` | Generate on-brand marketing graphic (x402 payment) |
 | GET | `/v1/jobs/:id` | Check job status |
 | GET | `/v1/jobs` | List jobs (filter by wallet) |
 
@@ -202,6 +220,7 @@ console.log(job.logo); // CDN URLs
 |---------|-------|--------|
 | Logo System | $5 | Icon, wordmark, stacked, horizontal + brand-system.json |
 | Social Assets | $5 | Avatar (1K + ACP) + Twitter banner + OG card + Community banner |
+| On-Brand GFX | $2 | Single marketing graphic (any aspect ratio) |
 
 ---
 
@@ -232,6 +251,37 @@ console.log(job.logo); // CDN URLs
 | `secondaryColor` / `secondary_color` | ❌ | Secondary color hex |
 | `backgroundColor` / `background_color` | ❌ | Background color hex |
 | `renderStyle` / `render_style` | ❌ | flat, gradient, glass, chrome, gold, neon, 3d |
+
+### GFX Service (Mode 1: From Logo Service)
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| `brandSystemUrl` / `brand_system_url` | ✅ | URL to brand-system.json from logo service |
+| `prompt` | ✅ | What graphic to generate (be specific about purpose, mood, text) |
+| `aspectRatio` / `aspect_ratio` | ❌ | Output ratio: 1:1, 4:5, 16:9, 9:16, etc. (default: 1:1) |
+
+### GFX Service (Mode 2: BYOL)
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| `logoUrl` / `logo_url` | ✅ | URL to your existing logo image |
+| `brandName` / `brand_name` | ✅ | Brand name |
+| `prompt` | ✅ | What graphic to generate |
+| `aspectRatio` / `aspect_ratio` | ❌ | Output ratio (default: 1:1) |
+| `primaryColor` / `primary_color` | ❌ | Primary color hex (auto-extracted if not provided) |
+| `secondaryColor` / `secondary_color` | ❌ | Secondary color hex |
+| `renderStyle` / `render_style` | ❌ | flat, gradient, glass, chrome, gold, neon, 3d |
+
+### GFX Aspect Ratios
+
+| Ratio | Pixels | Use Case |
+|-------|--------|----------|
+| `1:1` | 1024×1024 | Instagram, Twitter, LinkedIn posts |
+| `4:5` | 1024×1280 | Instagram feed (portrait) |
+| `9:16` | 1024×1820 | Stories, Reels, TikTok |
+| `16:9` | 1820×1024 | YouTube thumbnails, Twitter cards |
+| `3:2` | 1536×1024 | Blog headers |
+| `2:3` | 1024×1536 | Pinterest |
 
 ---
 
@@ -267,6 +317,22 @@ console.log(job.logo); // CDN URLs
     "twitterBanner": "https://pub-156972f0e0f44d7594f4593dbbeaddcb.r2.dev/acme/twitter-banner.png",
     "ogCard": "https://pub-156972f0e0f44d7594f4593dbbeaddcb.r2.dev/acme/og-card.png",
     "communityBanner": "https://pub-156972f0e0f44d7594f4593dbbeaddcb.r2.dev/acme/community-banner.png"
+  }
+}
+```
+
+### GFX Response
+
+```json
+{
+  "jobId": "gfx-789",
+  "status": "completed",
+  "brandName": "Acme",
+  "gfx": {
+    "url": "https://pub-156972f0e0f44d7594f4593dbbeaddcb.r2.dev/acme/gfx/gfx-789.png",
+    "width": 1024,
+    "height": 1024,
+    "aspectRatio": "1:1"
   }
 }
 ```
