@@ -1,21 +1,9 @@
----
-name: opengfx
-description: AI brand design system — generates complete logo systems, style guides, and social assets in minutes.
-metadata:
-  openclaw:
-    emoji: "🎨"
-    homepage: "https://opengfx.app"
-    requires:
-      bins: ["acp"]
-    primaryEnv: "LITE_AGENT_API_KEY"
----
-
 # Skill: opengfx
 
 ## Description
 AI brand design system — generates complete logo systems, style guides, and social assets in minutes.
 
-**Pricing:** $5 per service (paid via ACP/USDC)
+**Pricing:** $5 per service (Logo or Social)
 
 **This is a SERVICE skill** — it calls an external API via ACP. No code execution, no local files modified.
 
@@ -24,92 +12,61 @@ AI brand design system — generates complete logo systems, style guides, and so
 ## Privacy & Data
 
 - **What you send:** Brand name, concept description, optional tagline
-- **What happens:** AI generates logo system (icon, wordmark, lockups), analyzes style, creates social assets
-- **Data retention:** Assets stored on Cloudflare R2. Contact support@aklo.io for deletion requests.
-- **Public URLs:** Generated assets are accessible via public CDN URLs. Do not submit confidential brand names or concepts you don't own.
-- **Recommendation:** Test with non-sensitive dummy data first. Only submit brand names/concepts you own or have rights to use.
+- **What happens:** The service generates logo system (icon, wordmark, lockups), analyzes style, creates social assets
+- **Data retention:** Assets stored on Cloudflare R2 for 30 days, then deleted. Contact aklo@aklo.studio for early deletion.
+- **Recommendation:** Only submit brand names/concepts you own or have rights to use. Do not submit confidential or trademarked content.
 
 ---
 
-## Requirements
+## ACP Payment Flow
 
-This skill requires:
-- **ACP CLI** (`acp`) — Install via `clawhub install virtuals-protocol-acp`
-- **ACP wallet configured** — Run `acp setup` to authenticate
-- **USDC balance** — Jobs cost $5 USDC each (paid on Base chain)
+This skill uses the **ACP (Agent Commerce Protocol)** on Virtuals Protocol — a standard for agent-to-agent commerce.
 
----
+### How It Works
 
-## Services
+1. **Create Job** → You submit a job request via `acp job create`
+2. **Pay** → ACP handles payment (USDC on Base chain)
+3. **Poll** → Check job status via `acp job status`
+4. **Receive** → Get asset URLs in the job deliverable
 
-### 1. Logo Designer (`logo`)
+### Who Signs Payments?
 
-Complete brand foundation package.
+**Your agent's wallet signs payments, not this skill.**
 
-**Input:**
-- `brandName` (required) — The brand/company name
-- `concept` (required) — Brand concept, vibe, industry, style direction
-- `tagline` (optional) — Tagline or slogan
+The skill only documents the API. Payment signing is handled by:
+- Your ACP CLI configuration and wallet
+- The Virtuals Protocol ACP infrastructure
 
-**Output:**
-- Icon (1024x1024 PNG)
-- Wordmark (PNG)
-- Stacked lockup (1024x1024 PNG)
-- Horizontal lockup (PNG)
-- `brand-system.json` — colors, typography, render style, mode (dark/light)
-
-**Price:** $5 USDC
-
-### 2. Social Asset Generator (`social`)
-
-Social media assets from an existing brand system.
-
-**Input:**
-- `brandSystemUrl` (required) — URL to the `brand-system.json` file from the logo service
-
-**Output:**
-- Avatar (1024x1024 PNG)
-- Avatar ACP (400x400 JPEG, <50KB)
-- Twitter banner (3000x1000, 3:1)
-- OG card (1200x628, 1.91:1) — for social link previews
-- Community banner (1200x480, 2.5:1) — for Twitter communities
-
-**Price:** $5 USDC
+**No private keys are needed or requested by this skill.**
 
 ---
 
-## ACP Usage
+## API Reference
 
-OpenGFX is available via the Agent Commerce Protocol on Virtuals.
+**Agent Wallet:** `0x7cf4CE250a47Baf1ab87820f692BB87B974a6F4e`
 
-### Agent Details
-- **Agent:** OpenGFX
-- **Wallet:** `0x7cf4CE250a47Baf1ab87820f692BB87B974a6F4e`
-
-### Create a Logo Job
+### Create Logo Job
 
 ```bash
 acp job create 0x7cf4CE250a47Baf1ab87820f692BB87B974a6F4e logo \
   --requirements '{"brandName":"Acme","concept":"Modern fintech startup, bold and trustworthy","tagline":"Banking for Everyone"}'
 ```
 
-### Poll for Completion
+**Response:**
+```json
+{
+  "jobId": "abc-123",
+  "status": "processing"
+}
+```
+
+### Poll Job Status
 
 ```bash
 acp job status <jobId>
 ```
 
-### Create Social Assets
-
-After the logo job completes, use the `brandSystemUrl` from the response:
-
-```bash
-acp job create 0x7cf4CE250a47Baf1ab87820f692BB87B974a6F4e social \
-  --requirements '{"brandSystemUrl":"https://pub-156972f0e0f44d7594f4593dbbeaddcb.r2.dev/acme/brand-system.json"}'
-```
-
-### Example Response (logo job)
-
+**Response (completed):**
 ```json
 {
   "brand": "Acme",
@@ -119,31 +76,48 @@ acp job create 0x7cf4CE250a47Baf1ab87820f692BB87B974a6F4e social \
     "wordmark": "https://pub-156972f0e0f44d7594f4593dbbeaddcb.r2.dev/acme/wordmark.png",
     "stacked": "https://pub-156972f0e0f44d7594f4593dbbeaddcb.r2.dev/acme/stacked.png",
     "horizontal": "https://pub-156972f0e0f44d7594f4593dbbeaddcb.r2.dev/acme/horizontal.png",
+    "brandSystem": "https://pub-156972f0e0f44d7594f4593dbbeaddcb.r2.dev/acme/brand-system.json"
+  }
+}
+```
+
+### Create Social Assets Job
+
+```bash
+acp job create 0x7cf4CE250a47Baf1ab87820f692BB87B974a6F4e social \
+  --requirements '{"brandSystemUrl":"https://pub-156972f0e0f44d7594f4593dbbeaddcb.r2.dev/acme/brand-system.json"}'
+```
+
+**Response (completed):**
+```json
+{
+  "brand": "Acme",
+  "assets": {
     "avatar": "https://pub-156972f0e0f44d7594f4593dbbeaddcb.r2.dev/acme/avatar.png",
     "avatarAcp": "https://pub-156972f0e0f44d7594f4593dbbeaddcb.r2.dev/acme/avatar-acp.jpg",
     "twitterBanner": "https://pub-156972f0e0f44d7594f4593dbbeaddcb.r2.dev/acme/twitter-banner.png",
-    "brandSystem": "https://pub-156972f0e0f44d7594f4593dbbeaddcb.r2.dev/acme/brand-system.json"
-  },
-  "colors": {
-    "primary": "#2563EB",
-    "secondary": "#10B981",
-    "background": "#FFFFFF"
-  },
-  "typography": {
-    "headingFont": "Inter",
-    "bodyFont": "Inter"
-  },
-  "renderStyle": {
-    "preset": "gradient"
+    "ogCard": "https://pub-156972f0e0f44d7594f4593dbbeaddcb.r2.dev/acme/og-card.png",
+    "communityBanner": "https://pub-156972f0e0f44d7594f4593dbbeaddcb.r2.dev/acme/community-banner.png"
   }
 }
 ```
 
 ---
 
-## x402 API (Coming Soon)
+## Pricing
 
-Direct HTTP API with x402 payment protocol — pay per request without ACP.
+| Service | Price | Output |
+|---------|-------|--------|
+| Logo System | $5 | Icon, wordmark, stacked, horizontal + brand-system.json |
+| Social Assets | $5 | Avatar (1K + ACP) + Twitter banner + OG card + Community banner |
+
+---
+
+## ACP (Virtuals Protocol)
+
+For agent-to-agent commerce via Virtuals Protocol:
+- **Agent:** OpenGFX
+- **Wallet:** `0x7cf4CE250a47Baf1ab87820f692BB87B974a6F4e`
 
 ---
 
@@ -153,14 +127,3 @@ Direct HTTP API with x402 payment protocol — pay per request without ACP.
 - **Include color preferences** if you have them (e.g., "blue and gold tones")
 - **Mention style direction** — "minimal", "playful", "corporate", "tech", "organic"
 - **Dark vs Light** — AI auto-detects, but you can hint ("dark mode aesthetic" or "bright and friendly")
-- **Test first** — Use non-sensitive dummy brand names to test the service
-
----
-
-## Links
-
-- **Website:** https://opengfx.app
-- **GitHub:** https://github.com/aklo360/opengfx-skill
-- **ClawHub:** https://clawhub.com/skills/opengfx
-- **ACP Marketplace:** https://app.virtuals.io/acp
-- **Support:** support@aklo.io
