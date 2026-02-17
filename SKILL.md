@@ -1,3 +1,12 @@
+---
+name: opengfx
+description: AI brand design system — logo systems, style guides, and social assets in minutes.
+version: 1.2.1
+homepage: https://opengfx.app
+source: https://github.com/aklo360/opengfx-skill
+author: AKLO Labs <aklo@aklo.studio>
+---
+
 # Skill: opengfx
 
 ## Description
@@ -5,7 +14,24 @@ AI brand design system — generates complete logo systems, style guides, and so
 
 **Pricing:** $5 per service (Logo or Social)
 
-**This is a SERVICE skill** — it calls an external API via ACP. No code execution, no local files modified.
+**This is a SERVICE skill** — it documents how to use an external paid API via ACP. No code execution, no local files modified, no credentials requested.
+
+---
+
+## Requirements
+
+This skill documents the OpenGFX API accessible via ACP (Agent Commerce Protocol).
+
+**To use this service, you need:**
+- An ACP-compatible agent/wallet (e.g., OpenClaw with ACP skill installed)
+- USDC on Base chain for payments ($5 per service)
+
+**This skill does NOT:**
+- Install any binaries
+- Request or store private keys
+- Execute any code on your system
+
+The `acp` commands shown below are examples — your agent framework handles the actual ACP integration.
 
 ---
 
@@ -18,24 +44,22 @@ AI brand design system — generates complete logo systems, style guides, and so
 
 ---
 
-## ACP Payment Flow
+## Payment Flow
 
-This skill uses the **ACP (Agent Commerce Protocol)** on Virtuals Protocol — a standard for agent-to-agent commerce.
+This skill uses **ACP (Agent Commerce Protocol)** on Virtuals Protocol.
 
 ### How It Works
 
-1. **Create Job** → You submit a job request via `acp job create`
+1. **Create Job** → Submit a job request to OpenGFX agent
 2. **Pay** → ACP handles payment (USDC on Base chain)
-3. **Poll** → Check job status via `acp job status`
+3. **Poll** → Check job status until complete
 4. **Receive** → Get asset URLs in the job deliverable
 
 ### Who Signs Payments?
 
 **Your agent's wallet signs payments, not this skill.**
 
-The skill only documents the API. Payment signing is handled by:
-- Your ACP CLI configuration and wallet
-- The Virtuals Protocol ACP infrastructure
+This skill only documents the API. Payment signing is handled by your agent's ACP integration (e.g., OpenClaw's built-in wallet, or your own wallet configuration).
 
 **No private keys are needed or requested by this skill.**
 
@@ -134,11 +158,15 @@ acp job create 0x7cf4CE250a47Baf1ab87820f692BB87B974a6F4e social \
 
 ---
 
-## ACP (Virtuals Protocol)
+## Vendor Information
 
-For agent-to-agent commerce via Virtuals Protocol:
-- **Agent:** OpenGFX
-- **Wallet:** `0x7cf4CE250a47Baf1ab87820f692BB87B974a6F4e`
+- **Service:** OpenGFX
+- **Provider:** AKLO Labs
+- **Website:** https://opengfx.app
+- **GitHub:** https://github.com/aklo360/opengfx-skill
+- **Support:** aklo@aklo.studio
+- **Agent Wallet:** `0x7cf4CE250a47Baf1ab87820f692BB87B974a6F4e`
+- **ACP Marketplace:** https://app.virtuals.io/acp
 
 ---
 
@@ -148,3 +176,4 @@ For agent-to-agent commerce via Virtuals Protocol:
 - **Include color preferences** if you have them (e.g., "blue and gold tones")
 - **Mention style direction** — "minimal", "playful", "corporate", "tech", "organic"
 - **Dark vs Light** — AI auto-detects, but you can hint ("dark mode aesthetic" or "bright and friendly")
+- **Test first** — Use a low-value test job to verify behavior before production use
