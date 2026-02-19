@@ -152,7 +152,31 @@ curl -X POST https://gateway.opengfx.app/v1/mascot \
   -d '{"brand_name":"Melodify","prompt":"Cute music note with headphones","primary_color":"#8B5CF6"}'
 ```
 
-### Output Poses
+### From Locked Master (expression sheet only)
+
+```bash
+# ACP
+acp job create 0x7cf4CE250a47Baf1ab87820f692BB87B974a6F4e mascot \
+  --requirements '{"brand_name":"Melodify","master_url":"https://example.com/master.png","leg_count":2}'
+
+# x402
+curl -X POST https://gateway.opengfx.app/v1/mascot \
+  -H "Content-Type: application/json" \
+  -d '{"brand_name":"Melodify","master_url":"https://example.com/master.png","leg_count":2}'
+```
+
+### Input Fields
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| `brand_name` | ✅ | Brand name |
+| `prompt` | ✅* | Mascot description (*required if no master_url) |
+| `master_url` | ✅* | URL to locked master (*required if no prompt) |
+| `primary_color` | ❌ | Primary color hex (e.g., "#8B5CF6") |
+| `creature` | ❌ | Creature type (e.g., "owl", "robot", "cat") |
+| `leg_count` | ❌ | Number of legs (required with master_url) |
+
+### Output Poses (6 total)
 
 | Pose | Description |
 |------|-------------|
