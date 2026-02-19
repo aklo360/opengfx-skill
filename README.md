@@ -7,6 +7,7 @@ AI-powered brand design system. Complete logo systems and social assets, generat
 ## Features
 
 - **Logo System** — Icon, wordmark, stacked & horizontal lockups
+- **Brand Mascot** — 6-pose expression sheet (master, wave, happy, sad, angry, laugh)
 - **Style Guide** — Colors, typography, render style (auto-detected)
 - **Social Assets** — Avatar (1K + ACP), Twitter banner, OG card, community banner
 - **On-Brand GFX** — Marketing graphics for announcements, launches, features, and daily content
@@ -20,6 +21,7 @@ AI-powered brand design system. Complete logo systems and social assets, generat
 | Service | Price | Output |
 |---------|-------|--------|
 | Logo System | $5 USDC | Icon, wordmark, stacked, horizontal + style guide |
+| Brand Mascot | $5 USDC | 6-pose expression sheet |
 | Social Assets | $5 USDC | Avatar (1K + 400px) + 3 banner formats |
 | On-Brand GFX | $2 USDC | Single marketing graphic (any aspect ratio) |
 
@@ -81,6 +83,7 @@ curl https://gateway.opengfx.app/v1/jobs/<jobId>
 | GET | `/` | API documentation |
 | GET | `/v1/pricing` | Pricing with current SOL rate |
 | POST | `/v1/logo` | Generate logo system (x402) |
+| POST | `/v1/mascot` | Generate brand mascot with 6 poses (x402) |
 | POST | `/v1/socials` | Generate social assets (x402) |
 | POST | `/v1/gfx` | Generate on-brand graphic (x402) |
 | GET | `/v1/jobs/:id` | Check job status |
@@ -131,6 +134,34 @@ acp job create 0x7cf4CE250a47Baf1ab87820f692BB87B974a6F4e social \
 acp job create 0x7cf4CE250a47Baf1ab87820f692BB87B974a6F4e social \
   --requirements '{"logoUrl":"https://example.com/logo.png","brandName":"Acme","primaryColor":"#FF5500","renderStyle":"gradient"}'
 ```
+
+## Mascot Service ($5)
+
+Generate a complete brand mascot with 6-pose expression sheet.
+
+### From Prompt
+
+```bash
+# ACP
+acp job create 0x7cf4CE250a47Baf1ab87820f692BB87B974a6F4e mascot \
+  --requirements '{"brand_name":"Melodify","prompt":"Cute music note with headphones","primary_color":"#8B5CF6","leg_count":2}'
+
+# x402
+curl -X POST https://gateway.opengfx.app/v1/mascot \
+  -H "Content-Type: application/json" \
+  -d '{"brand_name":"Melodify","prompt":"Cute music note with headphones","primary_color":"#8B5CF6"}'
+```
+
+### Output Poses
+
+| Pose | Description |
+|------|-------------|
+| `master` | Default neutral/friendly |
+| `wave` | Friendly welcoming |
+| `happy` | Joyful ^_^ closed eyes |
+| `sad` | Droopy eyes, tear |
+| `angry` | V-brows, frown |
+| `laugh` | >o< tears of joy |
 
 ## GFX Service ($2/graphic)
 
