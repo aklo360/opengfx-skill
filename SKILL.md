@@ -175,7 +175,7 @@ https://gateway.opengfx.app
 
 ### x402 Payment Flow
 
-1. **Request service** → POST `/v1/logo` or `/v1/socials` with JSON body
+1. **Request service** → POST to any endpoint (`/v1/logo`, `/v1/mascot`, `/v1/socials`, `/v1/gfx`)
 2. **Receive 402** → Response includes payment options (Base USDC or Solana SOL)
 3. **Sign payment** → Use wallet to sign the payment authorization
 4. **Retry with payment** → Same request with `X-Payment` header containing signed payment
@@ -183,21 +183,47 @@ https://gateway.opengfx.app
 6. **Poll for completion** → GET `/v1/jobs/:jobId` until `status: "completed"`
 7. **Get assets** → Response contains CDN URLs for all generated assets
 
-### Example: Logo Request
+### Example: Logo Request ($5)
 
 ```bash
-# Step 1: Initial request (returns 402)
 curl -X POST https://gateway.opengfx.app/v1/logo \
   -H "Content-Type: application/json" \
   -d '{"brand_name":"Acme","concept":"Modern fintech startup"}'
+```
 
-# Step 2: After signing payment, retry with X-Payment header
-curl -X POST https://gateway.opengfx.app/v1/logo \
+### Example: Mascot Request ($5)
+
+```bash
+curl -X POST https://gateway.opengfx.app/v1/mascot \
   -H "Content-Type: application/json" \
-  -H "X-Payment: <base64-encoded-signed-payment>" \
-  -d '{"brand_name":"Acme","concept":"Modern fintech startup"}'
+  -d '{"brand_name":"Melodify","prompt":"Cute music note mascot with headphones","primary_color":"#8B5CF6"}'
+```
 
-# Step 3: Poll for completion
+### Example: Social Assets Request ($5)
+
+```bash
+# From brand-system.json
+curl -X POST https://gateway.opengfx.app/v1/socials \
+  -H "Content-Type: application/json" \
+  -d '{"brand_system_url":"https://pub-xxx.r2.dev/acme/brand-system.json"}'
+
+# BYOL mode
+curl -X POST https://gateway.opengfx.app/v1/socials \
+  -H "Content-Type: application/json" \
+  -d '{"logo_url":"https://example.com/logo.png","brand_name":"Acme"}'
+```
+
+### Example: GFX Request ($2)
+
+```bash
+curl -X POST https://gateway.opengfx.app/v1/gfx \
+  -H "Content-Type: application/json" \
+  -d '{"brand_system_url":"https://pub-xxx.r2.dev/acme/brand-system.json","prompt":"Launch announcement graphic","aspect_ratio":"1:1"}'
+```
+
+### Poll for Completion
+
+```bash
 curl https://gateway.opengfx.app/v1/jobs/<jobId>
 ```
 
